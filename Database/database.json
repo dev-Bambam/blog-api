@@ -1,72 +1,25 @@
 [
   {
     "id": 1,
-    "title": "The Benefits of Meditation for Mental Health",
-    "description": "Discover the positive impact of meditation on mental well-being",
-    "author": "John Doe",
-    "timestamp": "2022-01-01T12:00:00.000Z",
-    "body": "Meditation has been practiced for centuries, and its benefits for mental health are well-documented. By taking just a few minutes each day to focus on your breath and quiet your mind, you can reduce stress and anxiety, improve your mood, and even alleviate symptoms of depression. Regular meditation can also improve sleep quality, boost self-esteem, and increase feelings of compassion and empathy. Whether you're a seasoned meditator or just starting out, incorporating this practice into your daily routine can have a profound impact on your mental well-being.",
-    "categories": ["health", "wellness"],
-    "tags": ["meditation", "mental health"],
+    "title": "The Benefits of Traveling Solo",
+    "description": "Discover the joys of exploring new places on your own",
+    "author": "Jane Doe",
+    "timestamp": "2022-01-10T12:00:00.000Z",
+    "body": "Traveling solo can be a daunting prospect, but it can also be an incredibly liberating and empowering experience. By traveling alone, you're free to create your own itinerary and make spontaneous decisions without having to consider anyone else's opinions or preferences. You'll also have the opportunity to meet new people and form meaningful connections with fellow travelers. Whether you're looking to challenge yourself, learn more about yourself, or simply enjoy some time alone, solo travel can be a life-changing experience that broadens your horizons and helps you grow as a person.",
+    "categories": ["travel", "adventure"],
+    "tags": ["solo travel", "backpacking"],
     "comments": [
       {
-        "id": 1,
-        "author": "Jane Doe",
-        "timestamp": "2022-01-02T14:00:00.000Z",
-        "body": "I completely agree with this article! I've been meditating for a few months now and I've noticed a huge difference in my stress levels and overall mood."
+        "id": 2,
+        "author": "John Doe",
+        "timestamp": "2022-01-11T14:00:00.000Z",
+        "body": "I completely agree with this article! I traveled solo through Europe last year and it was an incredible experience. I met so many amazing people and had the freedom to do whatever I wanted, whenever I wanted."
       }
     ]
   },
   {
     "id": 2,
-    "title": "The Impact of Social Media on Relationships",
-    "description": "Exploring the effects of social media on our personal relationships",
-    "author": "John Doe",
-    "timestamp": "2022-01-05T10:00:00.000Z",
-    "body": "Social media has revolutionized the way we communicate with each other, but it's also had a profound impact on our personal relationships. While social media can make it easier to stay connected with friends and family who live far away, it can also create unrealistic expectations and promote comparison and competition. Furthermore, the constant stream of curated and manipulated content can lead to feelings of inadequacy and low self-esteem. By being mindful of our social media use and taking steps to maintain healthy online habits, we can mitigate the negative effects of social media on our relationships and cultivate more meaningful and authentic connections with others.",
-    "categories": ["technology", "relationships"],
-    "tags": ["social media", "communication"],
-    "comments": []
-  },
-  {
-    "id": 3,
-    "title": "The Benefits of Traveling Solo",
-    "description": "Discover the joys of exploring new places on your own",
-    "author": "Jane Doe",
-    "timestamp": "2022-01-10T12:00:00.000Z",
-    "body": "Traveling solo can be a daunting prospect, but it can also be an incredibly liberating and empowering experience. By traveling alone, you're free to create your own itinerary and make spontaneous decisions without having to consider anyone else's opinions or preferences. You'll also have the opportunity to meet new people and form meaningful connections with fellow travelers. Whether you're looking to challenge yourself, learn more about yourself, or simply enjoy some time alone, solo travel can be a life-changing experience that broadens your horizons and helps you grow as a person.",
-    "categories": ["travel", "adventure"],
-    "tags": ["solo travel", "backpacking"],
-    "comments": [
-      {
-        "id": 2,
-        "author": "John Doe",
-        "timestamp": "2022-01-11T14:00:00.000Z",
-        "body": "I completely agree with this article! I traveled solo through Europe last year and it was an incredible experience. I met so many amazing people and had the freedom to do whatever I wanted, whenever I wanted."
-      }
-    ]
-  },
-  {
-    "id": 8,
-    "title": "The Benefits of Traveling Solo",
-    "description": "Discover the joys of exploring new places on your own",
-    "author": "Jane Doe",
-    "timestamp": "2022-01-10T12:00:00.000Z",
-    "body": "Traveling solo can be a daunting prospect, but it can also be an incredibly liberating and empowering experience. By traveling alone, you're free to create your own itinerary and make spontaneous decisions without having to consider anyone else's opinions or preferences. You'll also have the opportunity to meet new people and form meaningful connections with fellow travelers. Whether you're looking to challenge yourself, learn more about yourself, or simply enjoy some time alone, solo travel can be a life-changing experience that broadens your horizons and helps you grow as a person.",
-    "categories": ["travel", "adventure"],
-    "tags": ["solo travel", "backpacking"],
-    "comments": [
-      {
-        "id": 2,
-        "author": "John Doe",
-        "timestamp": "2022-01-11T14:00:00.000Z",
-        "body": "I completely agree with this article! I traveled solo through Europe last year and it was an incredible experience. I met so many amazing people and had the freedom to do whatever I wanted, whenever I wanted."
-      }
-    ]
-  },
-  {
-    "id": 9,
-    "title": "The Benefits of Traveling Solo",
+    "title": "The Benefits of Traveling Solo and Light",
     "description": "Discover the joys of exploring new places on your own",
     "author": "Jane Doe",
     "timestamp": "2022-01-10T12:00:00.000Z",
