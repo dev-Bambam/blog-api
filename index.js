@@ -6,7 +6,7 @@ app.use(json());
 const port = process.env.PORT || 3000;
 
 // reading in the database
-const Database = './Database/database.json", "utf-8';
+const Database = "./Database/database.json";
 const posts = JSON.parse(readFileSync(Database, "utf-8"));
 
 // All about the Blog's Posts
@@ -35,43 +35,50 @@ app.get("/posts", (req, res) => {
 
 // Retrieve a single blog post by ID
 app.get("/posts/:id", (req, res) => {
-   const id = req.params.id;
-   const post = posts.find((post) => post.id === parseInt(id));
+   const id = +req.params.id;
 
+   // search out posts from the array using id
+   const post = posts.find((post) => post.id === id);
+
+   // check if post is found 
    if (!post) {
-      res.status(404).json({
-         message: "NOT FOUND",
-      });
-   } else {
-      res.status(200).json({
-         status: "success",
-         data: {
-            post: post,
-         },
-      });
+      return res.status(404).json({
+         status: 'failed',
+         message: `can't find the specified blog post id: ${id}`
+      })
    }
+
+   // contiues if found
+   res.status(200).json({
+      status: 'success',
+      data: {
+         blog: post
+      }
+   })
 });
 
 // Create a new blog post
 app.post("/posts", (req, res) => {
    const newId = posts.length + 1;
-   const newPost = Object.assign({ id: newId }, req.body);
+   const incomingPost = req.body
+   const newPost = Object.assign({ id: newId }, incomingPost);
 
    posts.push(newPost);
 
    writeFile(Database, JSON.stringify(posts), (err) => {
       if (err) {
-         res.status(500).json({
+         return res.status(500).json({
             status: "Server Error",
          });
-      } else {
-         res.status(200).json({
-            status: "201",
-            data: {
-               posts: newPost,
-            },
-         });
-      }
+      } 
+
+      // send response if no error 
+      res.status(201).json({
+         status: 'created',
+         data: {
+            blog: newPost
+         }
+      })
    });
 });
 
@@ -113,7 +120,7 @@ app.put("/posts/:id", (req, res) => {
 });
 
 // patching a post
-app.patch("./posts/:id", (req, res) => {
+app.patch("/posts/:id", (req, res) => {
    const id = +req.params.id;
    const incomingPost = req.body;
 
@@ -137,16 +144,16 @@ app.patch("./posts/:id", (req, res) => {
    writeFile(Database, JSON.stringify(posts), (err) => {
       if (err) {
          return res.status(500).json({
-            status: 'failed',
-            message: 'internal server error'
-         })
+            status: "failed",
+            message: "internal server error",
+         });
       }
 
       res.status(200).json({
-         status: 'success',
-         data: posts
-      })
-   })
+         status: "success",
+         data: posts,
+      });
+   });
 });
 
 // Delete a single post
