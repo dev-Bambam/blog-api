@@ -11,17 +11,6 @@ const posts = JSON.parse(readFileSync(Database, "utf-8"));
 
 // All about the Blog's Posts
 
-app.get("/", (req, res) => {
-   res.status(200).json({
-      status: "success",
-      count: posts.length,
-      data: {
-         posts: posts,
-         message: "I am the new home route",
-      },
-   });
-});
-
 // Blog's Landing page
 app.get("/", (req, res) => {
    res.status(200).json({
