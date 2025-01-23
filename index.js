@@ -1,5 +1,5 @@
 import express, { json } from "express";
-import { readFileSync, stat, writeFile, writeFileSync } from "fs";
+import { readFileSync, stat, writeFile, writeFileSync } from "fs"; 
 
 const app = express();
 app.use(json());
@@ -11,10 +11,21 @@ const posts = JSON.parse(readFileSync(Database, "utf-8"));
 
 // All about the Blog's Posts
 
+app.get("/", (req, res) => {
+   res.status(200).json({
+      status: "success",
+      count: posts.length,
+      data: {
+         posts: posts,
+         message: "I am the new home route",
+      },
+   });
+});
+
 // Blog's Landing page
 app.get("/", (req, res) => {
    res.status(200).json({
-      status: success,
+      status: 'success',
       count: posts.length,
       data: {
          posts: posts,
@@ -56,6 +67,30 @@ app.get("/posts/:id", (req, res) => {
       }
    })
 });
+
+// to get post by title
+app.get('/posts/Title/:title', (req, res) => {
+   const title = req.params.title;
+
+   // search title from database
+   const post = posts.find((post) => post.title === title);
+
+   // check if post is found
+   if (!post) {
+      return res.status(404).json({
+         status: "failed",
+         message: `can't find the specified blog post id: ${id}`,
+      });
+   }
+
+   // contiues if found
+   res.status(200).json({
+      status: "success",
+      data: {
+         blog: post,
+      },
+   });
+})
 
 // Create a new blog post
 app.post("/posts", (req, res) => {
@@ -151,7 +186,7 @@ app.patch("/posts/:id", (req, res) => {
 
       res.status(200).json({
          status: "success",
-         data: posts,
+         data: updatedPost,
       });
    });
 });

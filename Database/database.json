@@ -42,6 +42,7 @@
       ]
    },
    {
+      "id": 3,
       "title": "The Benefits of Meditation for Mental Health and Finance",
       "description": "Discover the positive impact of meditation on mental well-being",
       "author": "John Doe",
@@ -56,8 +57,7 @@
             "timestamp": "2022-01-02T14:00:00.000Z",
             "body": "I completely agree with this article! I've been meditating for a few months now and I've noticed a huge difference in my stress levels and overall mood."
          }
-      ],
-      "id": 3
+      ]
    },
    {
       "id": 4,
@@ -110,6 +110,28 @@
             "author": "Jane Doe",
             "timestamp": "2022-01-02T14:00:00.000Z",
             "body": "I completely agree with this article! I've been meditating for a few months now and I've noticed a huge difference in my stress levels and overall mood."
+         }
+      ]
+   },
+   {
+      "id": 7,
+      "title": "The Importance of Financial Literacy for Young Adults",
+      "description": "Learn the basics of personal finance and set yourself up for long-term success",
+      "author": "Emily Chen",
+      "timestamp": "2022-02-01T10:00:00.000Z",
+      "body": "Financial literacy is a crucial skill for young adults to master, as it can help them make informed decisions about their money and set themselves up for long-term financial stability. By understanding basic concepts such as budgeting, saving, and investing, young adults can avoid common financial pitfalls and achieve their financial goals. Whether you're just starting out in your career or are looking to improve your financial knowledge, this article will provide you with the tools and resources you need to succeed.",
+      "categories": ["finance", "personal finance"],
+      "tags": ["financial literacy", "young adults"],
+      "comments": [
+         {
+            "author": "Michael Lee",
+            "timestamp": "2022-02-02T12:00:00.000Z",
+            "body": "This article is so informative and helpful! I've been trying to learn more about personal finance and this has given me a great starting point."
+         },
+         {
+            "author": "Sarah Kim",
+            "timestamp": "2022-02-03T14:00:00.000Z",
+            "body": "I completely agree with the importance of financial literacy for young adults. It's so important to start learning about personal finance early on to avoid financial mistakes later in life."
          }
       ]
    }
