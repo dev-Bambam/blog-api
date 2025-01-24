@@ -212,33 +212,86 @@ app.delete("/posts/:id", (req, res) => {
 // PUT /comments/{id}: Update a single comment by ID
 // DELETE /comments/{id}: Delete a single comment by ID
 
-// retrive a list of comments for a single blog post
+// retrieve a list of comments for a single blog post
 app.get("/posts/:id/comments", (req, res) => {
    const id = +req.params.id;
 
    // search for the post using the id
    const searchedPost = posts.find((post) => post.id === id);
 
-   // if post wasn't found 
+   // if post wasn't found
    if (!searchedPost) {
       return res.status(404).json({
          status: `failed`,
-         message: 'No comment for this blog post yet'
-      })
+         message: "blog post not found",
+      });
    }
 
    // continue if post was found
-   const comments = searchedPost.comments
+   const comments = searchedPost.comments;
 
    // send response
    return res.status(200).json({
-      status: 'sucess',
-      counts: comments.lenght,
+      status: "sucess",
+      counts: comments.length,
       data: {
-         comment: comments
-      }
-   })
+         comment: comments,
+      },
+   });
 });
+
+// create a comment for a single blog post
+app.post("/posts/:id/comments", (req, res) => {
+   const id = +req.params.id;
+   let incomingComment = req.body;
+   const Post = posts.find((post) => post.id === id);
+   const index = posts.indexOf(Post);
+
+   // if post wasn't found
+   if (!Post) {
+      return res.status(404).json({
+         status: "failed",
+         message: `can't find post with the id: ${id}`,
+      });
+   }
+
+   // continue if post was found
+
+   // assign id to the incoming comment and push the post comment array
+   const newId = Post.comments.length + 1;
+   incomingComment = Object.assign({ id: newId }, incomingComment);
+   Post.comments.push(incomingComment);
+   posts[index] = Post;
+
+   // write into the database
+   try {
+      writeFile(Database, JSON.stringify(posts), (err) => {
+         if (err) {
+            return res.status(500).json({
+               status: "failed",
+               message: "internal server error",
+            });
+         }
+
+         // continues if no error
+         return res.status(201).json({
+            status: "created",
+            data: {
+               incomingComment: incomingComment,
+               post: Post,
+            },
+         });
+      });
+   } catch (error) {
+      console.error(error);
+   }
+});
+
+// GET /comments/{id}: Retrieve a single comment of a post by id
+app.get("/posts/:id/comments/:id", (req, res) => {
+   
+});
+
 
 app.listen(port, () => {
    console.log(`Blog API listening at http://localhost:${port}`);
