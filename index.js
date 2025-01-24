@@ -1,5 +1,5 @@
 import express, { json } from "express";
-import { readFileSync, stat, writeFile, writeFileSync } from "fs"; 
+import { readFileSync, stat, writeFile, writeFileSync } from "fs";
 
 const app = express();
 app.use(json());
@@ -14,10 +14,10 @@ const posts = JSON.parse(readFileSync(Database, "utf-8"));
 // Blog's Landing page
 app.get("/", (req, res) => {
    res.status(200).json({
-      status: 'success',
+      status: "success",
       count: posts.length,
       data: {
-         posts: posts,
+         posts: "welcome to my blog's landing page",
       },
    });
 });
@@ -40,25 +40,25 @@ app.get("/posts/:id", (req, res) => {
    // search out posts from the array using id
    const post = posts.find((post) => post.id === id);
 
-   // check if post is found 
+   // check if post is found
    if (!post) {
       return res.status(404).json({
-         status: 'failed',
-         message: `can't find the specified blog post id: ${id}`
-      })
+         status: "failed",
+         message: `can't find the specified blog post id: ${id}`,
+      });
    }
 
    // contiues if found
    res.status(200).json({
-      status: 'success',
+      status: "success",
       data: {
-         blog: post
-      }
-   })
+         blog: post,
+      },
+   });
 });
 
 // to get post by title
-app.get('/posts/Title/:title', (req, res) => {
+app.get("/posts/Title/:title", (req, res) => {
    const title = req.params.title;
 
    // search title from database
@@ -79,12 +79,12 @@ app.get('/posts/Title/:title', (req, res) => {
          blog: post,
       },
    });
-})
+});
 
 // Create a new blog post
 app.post("/posts", (req, res) => {
    const newId = posts.length + 1;
-   const incomingPost = req.body
+   const incomingPost = req.body;
    const newPost = Object.assign({ id: newId }, incomingPost);
 
    posts.push(newPost);
@@ -94,15 +94,15 @@ app.post("/posts", (req, res) => {
          return res.status(500).json({
             status: "Server Error",
          });
-      } 
+      }
 
-      // send response if no error 
+      // send response if no error
       res.status(201).json({
-         status: 'created',
+         status: "created",
          data: {
-            blog: newPost
-         }
-      })
+            blog: newPost,
+         },
+      });
    });
 });
 
@@ -202,6 +202,42 @@ app.delete("/posts/:id", (req, res) => {
          message: "bad request",
       });
    }
+});
+
+// ALl about comments
+
+// GET /posts/{id}/comments: Retrieve a list of comments for a single blog post
+// POST /posts/{id}/comments: Create a new comment for a single blog post
+// GET /comments/{id}: Retrieve a single comment by ID
+// PUT /comments/{id}: Update a single comment by ID
+// DELETE /comments/{id}: Delete a single comment by ID
+
+// retrive a list of comments for a single blog post
+app.get("/posts/:id/comments", (req, res) => {
+   const id = +req.params.id;
+
+   // search for the post using the id
+   const searchedPost = posts.find((post) => post.id === id);
+
+   // if post wasn't found 
+   if (!searchedPost) {
+      return res.status(404).json({
+         status: `failed`,
+         message: 'No comment for this blog post yet'
+      })
+   }
+
+   // continue if post was found
+   const comments = searchedPost.comments
+
+   // send response
+   return res.status(200).json({
+      status: 'sucess',
+      counts: comments.lenght,
+      data: {
+         comment: comments
+      }
+   })
 });
 
 app.listen(port, () => {
