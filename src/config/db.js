@@ -1,12 +1,13 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-const connectToDb = async () => {
-    try {
-        let dbUrl = 'url link';
-        await mongoose.connect(dbUrl);
-        console.log('Database connected');
-    } catch (error) {
-        console.log(error)
-    }
+export default async function DBconnection() {
+   try {
+      let dbUrl =
+         "mongodb+srv://ayogood18:U1QgXKIewE4YCOKB@cluster0.s9rem.mongodb.net/bloggerAPI?retryWrites=true&w=majority&appName=Cluster0";
+     await mongoose.connect(dbUrl);
+
+      console.log("database connect successfully");
+   } catch (error) {
+      console.error(error);
+   }
 }
-module.exports = connectToDb
