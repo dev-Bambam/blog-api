@@ -1,14 +1,15 @@
 import express, { json } from "express";
 import { readFileSync, stat, writeFile, writeFileSync } from "fs";
-import DBconnection from "./src/config/db";
 
 const app = express();
 app.use(json());
 
-// All about the Blog's Posts
+const port = 3000;
+const Database = "./Database/database.json";
+const posts = JSON.parse(readFileSync(Database, "utf-8"));
 
-// Blog's Landing page
-app.get("/", (req, res) => {
+// Route handlers function
+const homeRouteHandler = (req, res) => {
    res.status(200).json({
       status: "success",
       count: posts.length,
@@ -16,10 +17,9 @@ app.get("/", (req, res) => {
          posts: "welcome to my blog's landing page",
       },
    });
-});
+};
 
-// Retrieve a list of all blog posts
-app.get("/posts", (req, res) => {
+const getAllPostsRouteHandler = (req, res) => {
    res.status(200).json({
       status: "success",
       count: posts.length,
@@ -27,10 +27,9 @@ app.get("/posts", (req, res) => {
          posts: posts,
       },
    });
-});
+};
 
-// Retrieve a single blog post by ID
-app.get("/posts/:id", (req, res) => {
+const getSinglePostRouteHandler = (req, res) => {
    const id = +req.params.id;
 
    // search out posts from the array using id
@@ -51,10 +50,9 @@ app.get("/posts/:id", (req, res) => {
          blog: post,
       },
    });
-});
+};
 
-// to get post by title
-app.get("/posts/Title/:title", (req, res) => {
+const getPostByTitleRouteHandler = (req, res) => {
    const title = req.params.title;
 
    // search title from database
@@ -75,10 +73,9 @@ app.get("/posts/Title/:title", (req, res) => {
          blog: post,
       },
    });
-});
+};
 
-// Create a new blog post
-app.post("/posts", (req, res) => {
+const createPostRouteHandler = (req, res) => {
    const newId = posts.length + 1;
    const incomingPost = req.body;
    const newPost = Object.assign({ id: newId }, incomingPost);
@@ -100,10 +97,9 @@ app.post("/posts", (req, res) => {
          },
       });
    });
-});
+};
 
-// Update a single blog post by ID
-app.put("/posts/:id", (req, res) => {
+const updatePostRouteHandler = (req, res) => {
    const id = +req.params.id;
    const incomingPost = req.body;
 
@@ -137,10 +133,9 @@ app.put("/posts/:id", (req, res) => {
          data: updatedPost,
       });
    });
-});
+};
 
-// patching a post
-app.patch("/posts/:id", (req, res) => {
+const patchPostRouteHandler = (req, res) => {
    const id = +req.params.id;
    const incomingPost = req.body;
 
@@ -174,10 +169,9 @@ app.patch("/posts/:id", (req, res) => {
          data: updatedPost,
       });
    });
-});
+};
 
-// Delete a single post
-app.delete("/posts/:id", (req, res) => {
+const deletePostRouteHandler = (req, res) => {
    const id = req.params.id;
    // search Array
    const index = posts.findIndex((post) => post.id === parseInt(id));
@@ -198,18 +192,9 @@ app.delete("/posts/:id", (req, res) => {
          message: "bad request",
       });
    }
-});
+};
 
-// ALl about comments
-
-// GET /posts/{id}/comments: Retrieve a list of comments for a single blog post
-// POST /posts/{id}/comments: Create a new comment for a single blog post
-// GET /comments/{id}: Retrieve a single comment by ID
-// PUT /comments/{id}: Update a single comment by ID
-// DELETE /comments/{id}: Delete a single comment by ID
-
-// retrieve a list of comments for a single blog post
-app.get("/posts/:id/comments", (req, res) => {
+const getPostCommentsRouteHandler = (req, res) => {
    const id = +req.params.id;
 
    // search for the post using the id
@@ -234,10 +219,9 @@ app.get("/posts/:id/comments", (req, res) => {
          comment: comments,
       },
    });
-});
+};
 
-// create a comment for a single blog post
-app.post("/posts/:id/comments", (req, res) => {
+const createPostCommentRouteHandler = (req, res) => {
    const id = +req.params.id;
    let incomingComment = req.body;
    const Post = posts.find((post) => post.id === id);
@@ -281,7 +265,36 @@ app.post("/posts/:id/comments", (req, res) => {
    } catch (error) {
       console.error(error);
    }
-});
+};
 
-// GET /comments/{id}: Retrieve a single comment of a post by id
-app.get("/posts/:id/comments/:id", (req, res) => {});
+// All about the Blog's Posts endpoints
+app.route("/posts/:id")
+   .get(getSinglePostRouteHandler)
+   .put(updatePostRouteHandler)
+   .patch(patchPostRouteHandler)
+   .delete(deletePostRouteHandler);
+
+app.route("/posts").get(getAllPostsRouteHandler).post(createPostRouteHandler);
+
+app.route("/").get(homeRouteHandler);
+app.route("/posts/Title/:title").get(getPostByTitleRouteHandler);
+
+// ALl about comments
+
+// GET /posts/{id}/comments: Retrieve a list of comments for a single blog post
+// POST /posts/{id}/comments: Create a new comment for a single blog post
+// GET /comments/{id}: Retrieve a single comment by ID
+// PUT /comments/{id}: Update a single comment by ID
+// DELETE /comments/{id}: Delete a single comment by ID
+
+// retrieve a list of comments for a single blog post
+app.get("/posts/:id/comments", getPostCommentsRouteHandler);
+app.post("/posts/:id/comments", createPostCommentRouteHandler);
+
+app.route("/posts/:id/comments")
+   .get(getPostCommentsRouteHandler)
+   .post(createPostCommentRouteHandler);
+
+app.listen(port, () => {
+   console.log(`Blog API listening at http://localhost:${port}`);
+});
