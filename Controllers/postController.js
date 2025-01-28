@@ -1,11 +1,3 @@
-import express, { json } from "express";
-import { readFileSync, stat, writeFile, writeFileSync } from "fs";
-import postRouter from './routes/blogPostRoute.js'
-
-const app = express();
-app.use(json());
-
-const port = 3000;
 const Database = "./Database/database.json";
 const posts = JSON.parse(readFileSync(Database, "utf-8"));
 
@@ -267,14 +259,3 @@ const createPostCommentRouteHandler = (req, res) => {
       console.error(error);
    }
 };
-
-// All about the Blog's Posts endpoints
-
-// implement a router specific for the Blog post
-
-
-
-app.use('/posts', postRouter)
-app.listen(port, () => {
-   console.log(`Blog API listening at http://localhost:${port}`);
-});
