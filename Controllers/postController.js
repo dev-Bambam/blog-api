@@ -3,7 +3,62 @@ import { readFileSync, writeFile, writeFileSync } from "fs";
 const Database = "./Database/database.json";
 const posts = JSON.parse(readFileSync(Database, "utf-8"));
 
-// Route handlers function
+
+/**
+ * Validate request body for creating a new blog post
+ * @param {IncomingMessage} req - request object
+ * @param {ServerResponse} res - response object
+ * @param {NextFunction} next - next middleware function
+ * @returns {void}
+ * @throws {Error} if request body does not contain title, author and body
+ */
+export const validateBody = (req, res, next) => {
+   if (!req.body.title || !req.body.author || !req.body.body) {
+      return res.status(400).json({
+         status: 'failed',
+         message: 'Invalid blog post data, title, author, body is required'
+      })
+   }
+
+   next()
+}
+
+
+/**
+ * Middleware to check if a blog post with the given id exists.
+ * @param {IncomingMessage} req - The request object.
+ * @param {ServerResponse} res - The response object.
+ * @param {NextFunction} next - The next middleware function.
+ * @param {string} value - The id of the blog post to be checked.
+ * @returns {void}
+ * @throws {Error} If the blog post with the specified id is not found,
+ *                 returns a 404 status with an error message.
+ */
+export const checkId = (req, res, next, value) => {
+   console.log(`blog post id is ${value}`);
+
+   // search out posts from the array using id
+   const post = posts.find((post) => post.id === value * 1);
+
+   if (!post) {
+      return res.status(404).json({
+         status: "failed",
+         message: `can't find the specified blog post id: ${value}`,
+      });
+   }
+
+   next()
+}
+
+// Route handlers middleware functions
+
+/**
+ * Handles GET / request. Returns a welcome message and the number of blog posts available.
+ * @param {IncomingMessage} req - The request object.
+ * @param {ServerResponse} res - The response object.
+ * @returns {void}
+ * @throws {undefined} No error is thrown.
+ */
 export const homeHandler = (req, res) => {
    res.status(200).json({
       status: "success",
@@ -14,6 +69,13 @@ export const homeHandler = (req, res) => {
    });
 }
 
+/**
+ * Handles GET /posts request. Returns all blog posts.
+ * @param {IncomingMessage} req - The request object.
+ * @param {ServerResponse} res - The response object.
+ * @returns {void}
+ * @throws {undefined} No error is thrown.
+ */
 export const getAllPostsHandler = (req, res) =>{
    res.status(200).json({
       status: "success",
@@ -27,16 +89,15 @@ export const getAllPostsHandler = (req, res) =>{
 export const getSinglePostHandler = (req, res) => {
    const id = +req.params.id;
 
-   // search out posts from the array using id
+   // // search out posts from the array using id
    const post = posts.find((post) => post.id === id);
 
-   // check if post is found
-   if (!post) {
-      return res.status(404).json({
-         status: "failed",
-         message: `can't find the specified blog post id: ${id}`,
-      });
-   }
+   // if (!post) {
+   //    return res.status(404).json({
+   //       status: "failed",
+   //       message: `can't find the specified blog post id: ${id}`,
+   //    });
+   // }
 
    // contiues if found
    res.status(200).json({
@@ -53,13 +114,13 @@ export const getPostByTitleHandler = (req, res) =>{
    // search title from database
    const post = posts.find((post) => post.title === title);
 
-   // check if post is found
-   if (!post) {
-      return res.status(404).json({
-         status: "failed",
-         message: `can't find the specified blog post id: ${id}`,
-      });
-   }
+   // // check if post is found
+   // if (!post) {
+   //    return res.status(404).json({
+   //       status: "failed",
+   //       message: `can't find the specified blog post id: ${id}`,
+   //    });
+   // }
 
    // contiues if found
    res.status(200).json({
@@ -101,13 +162,13 @@ export const updatePostHandler = ( req, res) =>{
    // search out exisiting post
    const existingPost = posts.find((post) => post.id === id);
 
-   // if id not found
-   if (!existingPost) {
-      return res.status(404).json({
-         status: "failed",
-         message: `${id} not found`,
-      });
-   }
+   // // if id not found
+   // if (!existingPost) {
+   //    return res.status(404).json({
+   //       status: "failed",
+   //       message: `${id} not found`,
+   //    });
+   // }
 
    // merge the incoming and the current post object together and assign it back to posts
    const index = posts.indexOf(existingPost);
@@ -137,13 +198,13 @@ export const patchPostHandler = (req, res) => {
    // search out existing post
    const existingPost = posts.find((post) => post.id === id);
 
-   // check if id exist
-   if (!existingPost) {
-      return res.status(404).json({
-         status: "failed",
-         message: `post with ${id} not found`,
-      });
-   }
+   // // check if id exist
+   // if (!existingPost) {
+   //    return res.status(404).json({
+   //       status: "failed",
+   //       message: `post with ${id} not found`,
+   //    });
+   // }
 
    // merge incoming and existing post together and assign back to the array
    const index = posts.indexOf(existingPost);
@@ -196,12 +257,12 @@ export const getPostCommentsHandler =(req, res) => {
    const searchedPost = posts.find((post) => post.id === id);
 
    // if post wasn't found
-   if (!searchedPost) {
-      return res.status(404).json({
-         status: `failed`,
-         message: "blog post not found",
-      });
-   }
+   // if (!searchedPost) {
+   //    return res.status(404).json({
+   //       status: `failed`,
+   //       message: "blog post not found",
+   //    });
+   // }
 
    // continue if post was found
    const comments = searchedPost.comments;
@@ -223,12 +284,12 @@ export const createPostCommentHandler = (req, res) => {
    const index = posts.indexOf(Post);
 
    // if post wasn't found
-   if (!Post) {
-      return res.status(404).json({
-         status: "failed",
-         message: `can't find post with the id: ${id}`,
-      });
-   }
+   // if (!Post) {
+   //    return res.status(404).json({
+   //       status: "failed",
+   //       message: `can't find post with the id: ${id}`,
+   //    });
+   // }
 
    // continue if post was found
 
