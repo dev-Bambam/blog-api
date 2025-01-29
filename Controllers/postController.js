@@ -1,8 +1,10 @@
+import { readFileSync, writeFile, writeFileSync } from "fs";
+
 const Database = "./Database/database.json";
 const posts = JSON.parse(readFileSync(Database, "utf-8"));
 
 // Route handlers function
-const homeRouteHandler = (req, res) => {
+export const homeHandler = (req, res) => {
    res.status(200).json({
       status: "success",
       count: posts.length,
@@ -10,9 +12,9 @@ const homeRouteHandler = (req, res) => {
          posts: "welcome to my blog's landing page",
       },
    });
-};
+}
 
-const getAllPostsRouteHandler = (req, res) => {
+export const getAllPostsHandler = (req, res) =>{
    res.status(200).json({
       status: "success",
       count: posts.length,
@@ -20,9 +22,9 @@ const getAllPostsRouteHandler = (req, res) => {
          posts: posts,
       },
    });
-};
+}
 
-const getSinglePostRouteHandler = (req, res) => {
+export const getSinglePostHandler = (req, res) => {
    const id = +req.params.id;
 
    // search out posts from the array using id
@@ -43,9 +45,9 @@ const getSinglePostRouteHandler = (req, res) => {
          blog: post,
       },
    });
-};
+}
 
-const getPostByTitleRouteHandler = (req, res) => {
+export const getPostByTitleHandler = (req, res) =>{
    const title = req.params.title;
 
    // search title from database
@@ -66,9 +68,9 @@ const getPostByTitleRouteHandler = (req, res) => {
          blog: post,
       },
    });
-};
+}
 
-const createPostRouteHandler = (req, res) => {
+export const createPostHandler = (req, res) =>{
    const newId = posts.length + 1;
    const incomingPost = req.body;
    const newPost = Object.assign({ id: newId }, incomingPost);
@@ -90,9 +92,9 @@ const createPostRouteHandler = (req, res) => {
          },
       });
    });
-};
+}
 
-const updatePostRouteHandler = (req, res) => {
+export const updatePostHandler = ( req, res) =>{
    const id = +req.params.id;
    const incomingPost = req.body;
 
@@ -126,9 +128,9 @@ const updatePostRouteHandler = (req, res) => {
          data: updatedPost,
       });
    });
-};
+}
 
-const patchPostRouteHandler = (req, res) => {
+export const patchPostHandler = (req, res) => {
    const id = +req.params.id;
    const incomingPost = req.body;
 
@@ -162,9 +164,9 @@ const patchPostRouteHandler = (req, res) => {
          data: updatedPost,
       });
    });
-};
+}
 
-const deletePostRouteHandler = (req, res) => {
+export const deletePostHandler = (req, res) =>{
    const id = req.params.id;
    // search Array
    const index = posts.findIndex((post) => post.id === parseInt(id));
@@ -185,9 +187,9 @@ const deletePostRouteHandler = (req, res) => {
          message: "bad request",
       });
    }
-};
+}
 
-const getPostCommentsRouteHandler = (req, res) => {
+export const getPostCommentsHandler =(req, res) => {
    const id = +req.params.id;
 
    // search for the post using the id
@@ -212,9 +214,9 @@ const getPostCommentsRouteHandler = (req, res) => {
          comment: comments,
       },
    });
-};
+}
 
-const createPostCommentRouteHandler = (req, res) => {
+export const createPostCommentHandler = (req, res) => {
    const id = +req.params.id;
    let incomingComment = req.body;
    const Post = posts.find((post) => post.id === id);
@@ -258,4 +260,4 @@ const createPostCommentRouteHandler = (req, res) => {
    } catch (error) {
       console.error(error);
    }
-};
+}

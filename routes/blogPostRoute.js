@@ -1,17 +1,18 @@
 import express from "express";
+import controllers from './../Controllers/postController.js'
 
 const router = express.Router();
 
 router.route("/:id")
-   .get(getSinglePostRouteHandler)
-   .put(updatePostRouteHandler)
-   .patch(patchPostRouteHandler)
-   .delete(deletePostRouteHandler);
-router.route("/").get(getAllPostsRouteHandler).post(createPostRouteHandler);
-router.route("/").get(homeRouteHandler);
-router.route("/Title/:title").get(getPostByTitleRouteHandler);
-router.get("/:id/comments", getPostCommentsRouteHandler);
-router.post("/:id/comments", createPostCommentRouteHandler);
-router.route("/:id/comments").get(getPostCommentsRouteHandler).post(createPostCommentRouteHandler);
+   .get(controllers.getSinglePostHandler)
+   .put(controllers.updatePostHandler)
+   .patch(controllers.patchPostHandler)
+   .delete(controllers.deletePostHandler);
+router.route("/").get(controllers.getAllPostsHandler).post(controllers.createPostRouteHandler);
+router.route("/").get(controllers.homeHandler);
+router.route("/Title/:title").get(controllers.getPostByTitleHandler);
+router.get("/:id/comments", controllers.getPostCommentsHandler);
+router.post("/:id/comments", controllers.createPostCommentHandler);
+router.route("/:id/comments").get(controllers.getPostCommentsHandler).post(controllers.createPostCommentRouteHandler);
 
 module.exports = router;
