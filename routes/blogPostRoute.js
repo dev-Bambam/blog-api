@@ -9,14 +9,13 @@ import * as controllers from './../Controllers/postController.js'
 
 const router = express.Router();
 // using params middleware
-router.param('id', controllers.checkId)
 
 router.route("/:id")
    .get(controllers.getSinglePostHandler)
    .put(controllers.updatePostHandler)
    .patch(controllers.patchPostHandler)
    .delete(controllers.deletePostHandler);
-router.route("/").get(controllers.getAllPostsHandler).post(controllers.validateBody,controllers.createPostHandler);
+router.route("/").get(controllers.getAllPostsHandler).post(controllers.createPostHandler);
 router.route("/").get(controllers.homeHandler);
 router.route("/Title/:title").get(controllers.getPostByTitleHandler);
 router.get("/:id/comments", controllers.getPostCommentsHandler);

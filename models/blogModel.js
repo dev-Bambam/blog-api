@@ -3,26 +3,26 @@ import mongoose from "mongoose";
 const blogSchema = new mongoose.Schema({
    title: {
       type: String,
-      required: true,
+      required: [true, `please provide title`],
    },
    description: {
       type: String,
-      required: true,
+      required: [true, 'please provide description'],
    },
    author: {
       type: String,
-      required: true,
+      required: [true, 'please provide author name'],
    },
    body: {
       type: String,
-      required: true,
+      required: [true, 'please provide post body'],
    },
    published: {
       type: Boolean,
       default: false
    }
-});
+}, {timestamps: true});
 
-const BlogModel = mongoose.model('blog', blogSchema)
+const Blog = mongoose.model('Blog', blogSchema)
 
-export default  BlogModel
+export default  Blog

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-import 
-
+import Blog from "./../models/blogModel.js";
 
 // Route handlers middleware functions
 
@@ -19,7 +18,7 @@ export const homeHandler = (req, res) => {
          posts: "welcome to my blog's landing page",
       },
    });
-}
+};
 
 /**
  * Handles GET /posts request. Returns all blog posts.
@@ -28,243 +27,130 @@ export const homeHandler = (req, res) => {
  * @returns {void}
  * @throws {undefined} No error is thrown.
  */
-export const getAllPostsHandler = (req, res) =>{
-   
-}
+export const getAllPostsHandler = async (req, res) => {
+   try {
+      const posts = await Blog.find({});
 
-export const getSinglePostHandler = (req, res) => {
-   const id = +req.params.id;
-
-   // // search out posts from the array using id
-   const post = posts.find((post) => post.id === id);
-
-   // if (!post) {
-   //    return res.status(404).json({
-   //       status: "failed",
-   //       message: `can't find the specified blog post id: ${id}`,
-   //    });
-   // }
-
-   // contiues if found
-   res.status(200).json({
-      status: "success",
-      data: {
-         blog: post,
-      },
-   });
-}
-
-export const getPostByTitleHandler = (req, res) =>{
-   const title = req.params.title;
-
-   // search title from database
-   const post = posts.find((post) => post.title === title);
-
-   // // check if post is found
-   // if (!post) {
-   //    return res.status(404).json({
-   //       status: "failed",
-   //       message: `can't find the specified blog post id: ${id}`,
-   //    });
-   // }
-
-   // contiues if found
-   res.status(200).json({
-      status: "success",
-      data: {
-         blog: post,
-      },
-   });
-}
-
-export const createPostHandler = (req, res) =>{
-   const newId = posts.length + 1;
-   const incomingPost = req.body;
-   const newPost = Object.assign({ id: newId }, incomingPost);
-
-   posts.push(newPost);
-
-   writeFile(Database, JSON.stringify(posts), (err) => {
-      if (err) {
-         return res.status(500).json({
-            status: "Server Error",
+      if (!posts) {
+         return res.status(404).json({
+            status: "fail",
+            message: "No blog post yet",
          });
       }
 
-      // send response if no error
-      res.status(201).json({
-         status: "created",
+      return res.status(200).json({
+         status: "success",
+         count: posts.length,
          data: {
-            blog: newPost,
+            posts,
          },
       });
-   });
-}
-
-export const updatePostHandler = ( req, res) =>{
-   const id = +req.params.id;
-   const incomingPost = req.body;
-
-   // search out exisiting post
-   const existingPost = posts.find((post) => post.id === id);
-
-   // // if id not found
-   // if (!existingPost) {
-   //    return res.status(404).json({
-   //       status: "failed",
-   //       message: `${id} not found`,
-   //    });
-   // }
-
-   // merge the incoming and the current post object together and assign it back to posts
-   const index = posts.indexOf(existingPost);
-   const updatedPost = Object.assign(existingPost, incomingPost);
-   posts[index] = updatedPost;
-
-   // write into the database
-   writeFile(Database, JSON.stringify(posts), (err) => {
-      if (err) {
-         return res.status(500).json({
-            status: "failed",
-            message: "internal server error",
-         });
-      }
-
-      res.status(200).json({
-         status: "success",
-         data: updatedPost,
-      });
-   });
-}
-
-export const patchPostHandler = (req, res) => {
-   const id = +req.params.id;
-   const incomingPost = req.body;
-
-   // search out existing post
-   const existingPost = posts.find((post) => post.id === id);
-
-   // // check if id exist
-   // if (!existingPost) {
-   //    return res.status(404).json({
-   //       status: "failed",
-   //       message: `post with ${id} not found`,
-   //    });
-   // }
-
-   // merge incoming and existing post together and assign back to the array
-   const index = posts.indexOf(existingPost);
-   const updatedPost = Object.assign(existingPost, incomingPost);
-   posts[index] = updatedPost;
-
-   // write into the database;
-   writeFile(Database, JSON.stringify(posts), (err) => {
-      if (err) {
-         return res.status(500).json({
-            status: "failed",
-            message: "internal server error",
-         });
-      }
-
-      res.status(200).json({
-         status: "success",
-         data: updatedPost,
-      });
-   });
-}
-
-export const deletePostHandler = (req, res) =>{
-   const id = req.params.id;
-   // search Array
-   const index = posts.findIndex((post) => post.id === parseInt(id));
-
-   if (index !== -1) {
-      posts.splice(index, 1);
-      const updatedPosts = JSON.stringify(posts);
-      try {
-         writeFileSync("./Database/database.json", updatedPosts);
-      } catch (error) {
-         console.error(error.message);
-      }
-      res.json({
-         message: "post deleted successfully",
-      });
-   } else {
-      res.status(404).json({
-         message: "bad request",
+   } catch (error) {
+      res.status(500).json({
+         status: "fail",
+         message: error.message,
       });
    }
-}
+};
 
-export const getPostCommentsHandler =(req, res) => {
-   const id = +req.params.id;
-
-   // search for the post using the id
-   const searchedPost = posts.find((post) => post.id === id);
-
-   // if post wasn't found
-   // if (!searchedPost) {
-   //    return res.status(404).json({
-   //       status: `failed`,
-   //       message: "blog post not found",
-   //    });
-   // }
-
-   // continue if post was found
-   const comments = searchedPost.comments;
-
-   // send response
-   return res.status(200).json({
-      status: "sucess",
-      counts: comments.length,
-      data: {
-         comment: comments,
-      },
-   });
-}
-
-export const createPostCommentHandler = (req, res) => {
-   const id = +req.params.id;
-   let incomingComment = req.body;
-   const Post = posts.find((post) => post.id === id);
-   const index = posts.indexOf(Post);
-
-   // if post wasn't found
-   // if (!Post) {
-   //    return res.status(404).json({
-   //       status: "failed",
-   //       message: `can't find post with the id: ${id}`,
-   //    });
-   // }
-
-   // continue if post was found
-
-   // assign id to the incoming comment and push the post comment array
-   const newId = Post.comments.length + 1;
-   incomingComment = Object.assign({ id: newId }, incomingComment);
-   Post.comments.push(incomingComment);
-   posts[index] = Post;
-
-   // write into the database
+export const getSinglePostHandler = async (req, res) => {
    try {
-      writeFile(Database, JSON.stringify(posts), (err) => {
-         if (err) {
-            return res.status(500).json({
-               status: "failed",
-               message: "internal server error",
-            });
-         }
+      const postId = req.params.id;
 
-         // continues if no error
-         return res.status(201).json({
-            status: "created",
-            data: {
-               incomingComment: incomingComment,
-               post: Post,
-            },
+      if (!mongoose.isValidObjectId(postId)) {
+         return res.status(400).json({
+            status: "fail",
+            message: "invalid object id",
          });
+      }
+
+      const post = await Blog.findById(postId);
+
+      if (!post) {
+         return res.status(404).json({
+            status: "fail",
+            message: "Blog post not found",
+         });
+      }
+
+      return res.status(200).json({
+         status: "success",
+         data: {
+            post,
+         },
       });
    } catch (error) {
-      console.error(error);
+      res.status(500).json({
+         status: "fail",
+         message: error.message,
+      });
    }
-}
+};
+
+export const getPostByTitleHandler = async (req, res) => {
+   try {
+      const postTitle = req.params.title;
+
+      const post = await Blog.findOne({ title: postTitle });
+
+      if (!post) {
+         return res.status(404).json({
+            status: "fail",
+            message: "post not found",
+         });
+      }
+
+      return res.status(200).json({
+         status: 'success',
+         data: {
+            post
+         }
+      })
+   } catch (error) {
+      res.status(500).json({
+         status: "fail",
+         message: error.message,
+      });
+   }
+};
+
+export const createPostHandler = async (req, res) => {
+   try {
+      const incomingPost = req.body;
+      const post = new Blog(incomingPost);
+
+      await post.save();
+
+      res.status(200).json({
+         status: 'success',
+         data: {
+            post
+         }
+      })
+   } catch (error) {
+      res.status(400).json({
+         status: 'error',
+         message: error.message
+      })
+   }
+};
+
+export const updatePostHandler = (req, res) => {
+   
+};
+
+export const patchPostHandler = (req, res) => {
+ 
+};
+
+export const deletePostHandler = (req, res) => {
+   
+};
+
+export const getPostCommentsHandler = (req, res) => {
+   
+};
+
+export const createPostCommentHandler = (req, res) => {
+   
+};
