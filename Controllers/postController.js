@@ -1,54 +1,6 @@
-import { readFileSync, writeFile, writeFileSync } from "fs";
+import mongoose from "mongoose";
+import 
 
-const Database = "./Database/database.json";
-const posts = JSON.parse(readFileSync(Database, "utf-8"));
-
-
-/**
- * Validate request body for creating a new blog post
- * @param {IncomingMessage} req - request object
- * @param {ServerResponse} res - response object
- * @param {NextFunction} next - next middleware function
- * @returns {void}
- * @throws {Error} if request body does not contain title, author and body
- */
-export const validateBody = (req, res, next) => {
-   if (!req.body.title || !req.body.author || !req.body.body) {
-      return res.status(400).json({
-         status: 'failed',
-         message: 'Invalid blog post data, title, author, body is required'
-      })
-   }
-
-   next()
-}
-
-
-/**
- * Middleware to check if a blog post with the given id exists.
- * @param {IncomingMessage} req - The request object.
- * @param {ServerResponse} res - The response object.
- * @param {NextFunction} next - The next middleware function.
- * @param {string} value - The id of the blog post to be checked.
- * @returns {void}
- * @throws {Error} If the blog post with the specified id is not found,
- *                 returns a 404 status with an error message.
- */
-export const checkId = (req, res, next, value) => {
-   console.log(`blog post id is ${value}`);
-
-   // search out posts from the array using id
-   const post = posts.find((post) => post.id === value * 1);
-
-   if (!post) {
-      return res.status(404).json({
-         status: "failed",
-         message: `can't find the specified blog post id: ${value}`,
-      });
-   }
-
-   next()
-}
 
 // Route handlers middleware functions
 
@@ -77,13 +29,7 @@ export const homeHandler = (req, res) => {
  * @throws {undefined} No error is thrown.
  */
 export const getAllPostsHandler = (req, res) =>{
-   res.status(200).json({
-      status: "success",
-      count: posts.length,
-      data: {
-         posts: posts,
-      },
-   });
+   
 }
 
 export const getSinglePostHandler = (req, res) => {
