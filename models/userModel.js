@@ -27,6 +27,9 @@ const userSchema = new mongoose.Schema(
       bio: {
          type: String,
       },
+      age: {
+         type: Number
+      },
       deleted: {
          type: Boolean,
          default: false,
