@@ -13,7 +13,7 @@ const blogSchema = new mongoose.Schema(
       author: {
          type: mongoose.Schema.Types.ObjectId,
          ref: "User",
-         required: [true, "please provide author name"],
+         required: [true, "please provide author's Id"],
       },
       body: {
          type: String,
