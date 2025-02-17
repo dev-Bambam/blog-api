@@ -26,7 +26,6 @@ export const userRegistration = async (req, res) => {
          password: hashedPassword,
       });
 
-      await newUser.save();
       // token for authorisation
       const token = jwt.sign(
          {
@@ -35,6 +34,8 @@ export const userRegistration = async (req, res) => {
          process.env.SECRET_KEY,
          { expiresIn: "30min" }
       );
+
+      await newUser.save();
       return res.status(200).json({
          status: "success",
          message: "new user created",
@@ -87,30 +88,22 @@ export const userLogin = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
    try {
-      console.log(req.query);
+      const query = req.query;
       const filter = {};
-      const { age } = req.query;
 
-      if (age) {
-         filter.age = { $gte: parseInt(age) };
+      for (prop in query) {
+         if (prop.endsWith('_gt')) {
+            filter.prop.replace('_gt', '') = {$gt: Number(query[prop])}
+         } else if(prop.endsWith('gte')) {
+            filter.prop.replace('_gte', '') = {$gte: Number(query[prop])}
+         } else if (prop.endsWith('_lt')) {
+            filter.prop.replace('_lt', '') = {$lt: Number(query[prop])}
+         } else if (prop.endsWith('_lte')) {
+            filter.prop.replace('_lte', "") = {$lte: Number(query[prop])}
+         } else {
+            filter.prop = query.prop
+         }
       }
-
-      const users = await User.find(filter);
-
-      if (users.length === 0) {
-         return res.status(404).json({
-            status: "fail",
-            message: "no user found",
-         });
-      }
-
-      return res.status(200).json({
-         status: "success",
-         count: users.length,
-         data: {
-            users,
-         },
-      });
    } catch (error) {
       return res.status(500).json({
          status: "error",

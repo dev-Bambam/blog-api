@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 const auth = async (req, res, next) => {
    const authHeader = req.headers.authorisation;
    if (!authHeader) {
@@ -8,7 +10,7 @@ const auth = async (req, res, next) => {
    } else {
       const token = authHeader.split(" ")[1];
       try {
-         const decodedToken = await JsonWebTokenError.verify(token, process.env.SECRET_KEY);
+         const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
          req.user = decodedToken;
          next();
       } catch (error) {
@@ -21,3 +23,5 @@ const auth = async (req, res, next) => {
       }
    }
 };
+
+export default auth;
